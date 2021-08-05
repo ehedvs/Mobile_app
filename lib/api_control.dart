@@ -1,4 +1,4 @@
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -7,7 +7,7 @@ Future<List<Graduate>> fetchGraduates() async {
   var getCode = await FlutterBarcodeScanner.scanBarcode(
       "#009922", "Cancel", true, ScanMode.QR);
   var response = await http
-      .get(Uri.parse('http://192.168.137.167:8000/graduates/api/A/ur4444/09'));
+      .get(Uri.parse('http://10.240.72.149:8000/graduates/api/$getCode'));
   Map<String, dynamic> data = jsonDecode(response.body);
   Graduate graduate = Graduate.fromJson(data);
   List<Graduate> graduates = [];

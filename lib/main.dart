@@ -37,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: FutureBuilder(
         future: fetchGraduates(),
         builder: (context, AsyncSnapshot snapshot) {
-          
           if (snapshot.hasData) return PhotosList(photos: snapshot.data!);
           return Container(
               child: Column(
@@ -45,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(padding: const EdgeInsets.all(20)),
               Text("This App is working for Only Genuine Certificates"),
             ],
-            
           ));
         },
       ),
@@ -69,7 +67,7 @@ class PhotosList extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.network(
-                        'http://192.168.137.167:8000${photos[index].thumbnailUrl}'),
+                        'http://10.240.72.149:8000${photos[index].thumbnailUrl}'),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                     ),
