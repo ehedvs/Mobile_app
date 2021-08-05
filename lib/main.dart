@@ -1,85 +1,106 @@
-import 'dart:async';
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:http/http.dart' as http;
-Future<Graduate> fetchAlbum() async {
-  var getCode = await FlutterBarcodeScanner.scanBarcode(
-      "#009922", "Cancel", true, ScanMode.QR);
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums'));
+import 'package:qrcode/api_control.dart';
 
-  if (response.statusCode == 200) {
-    return Graduate.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+void main() => runApp(MyApp());
 
-class Graduate {
-  final int userId;
-  final int id;
-  final String title;
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    const appTitle = 'EHECVS';
 
-  Graduate({
-    required this.userId,
-    required this.id,
-    required this.title,
-  });
-
-  factory Graduate.fromJson(Map<String, dynamic> json) {
-    return Graduate(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
+    return const MaterialApp(
+      title: appTitle,
+      home: MyHomePage(title: appTitle),
     );
   }
 }
 
-void main() => runApp(MyApp());
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  final String title;
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyAppState extends State<MyApp> {
-  late Future<Graduate> futureData;
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
-  void initState() {
-    super.initState();
-    futureData = fetchAlbum();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      body: FutureBuilder(
+        future: fetchGraduates(),
+        builder: (context, AsyncSnapshot snapshot) {
+          
+          if (snapshot.hasData) return PhotosList(photos: snapshot.data!);
+          return Container(
+              child: Column(
+            children: [
+              Padding(padding: const EdgeInsets.all(20)),
+              Text("This App is working for Only Genuine Certificates"),
+            ],
+            
+          ));
+        },
+      ),
+    );
   }
+}
+
+class PhotosList extends StatelessWidget {
+  const PhotosList({Key? key, required this.photos}) : super(key: key);
+
+  final List<Graduate> photos;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Graduate Data',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Graduate Data'),
-          centerTitle: true,
-        ),
-        body: Center(
-          child: FutureBuilder<Graduate>(
-            future: futureData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data!.title+ (snapshot.data!.userId).toString());
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              return CircularProgressIndicator();
-            },
-          ),
-        ),
-      ),
-    );
+    return Scaffold(
+        body: ListView.builder(
+            itemCount: photos.length,
+            itemBuilder: (context, index) {
+              print(photos[index].thumbnailUrl);
+              return Container(
+                child: Column(
+                  children: [
+                    Image.network(
+                        'http://192.168.137.167:8000${photos[index].thumbnailUrl}'),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                    ),
+                    Text(photos[index].title),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                    ),
+                    Text(photos[index].id.toString()),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                    ),
+                    Text(
+                        "Graduated from Adama Science And Technology University"),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                    ),
+                    Text("School of Electrical Engineering and computing"),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                    ),
+                    Text("Computer Science and Engineering"),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                    ),
+                    Text("Has GPA 3.6"),
+                    Padding(
+                      padding: const EdgeInsets.all(70.0),
+                    )
+                  ],
+                ),
+              );
+            }));
   }
 }
