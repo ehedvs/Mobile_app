@@ -2,14 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qrcode/api_control.dart';
 
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const appTitle = 'EHECVS';
-
     return const MaterialApp(
       title: appTitle,
       home: MyHomePage(title: appTitle),
@@ -38,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
         future: fetchGraduates(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) return PhotosList(photos: snapshot.data!);
+          // print(snapshot.data);
           return Container(
               child: Column(
             children: [
@@ -62,29 +61,28 @@ class PhotosList extends StatelessWidget {
         body: ListView.builder(
             itemCount: photos.length,
             itemBuilder: (context, index) {
+              // print(photos[index].thumbnailUrl);
               print(photos[index].thumbnailUrl);
               return Container(
                 child: Column(
                   children: [
-                    Image.network(
-                        'http://10.240.72.149:8000${photos[index].thumbnailUrl}'),
+                    Image.network('${photos[index].thumbnailUrl}'),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                     ),
-                    Text(photos[index].title),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                    ),
-                    Text(photos[index].id.toString()),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                     ),
-                    Text(
-                        "Graduated from Adama Science And Technology University"),
+                    Text("Name:-" +
+                        photos[index].firstname +
+                        " " +
+                        photos[index].middlename +
+                        " " +
+                        photos[index].lastname),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                     ),
-                    Text("School of Electrical Engineering and computing"),
+                    Text("Institution :-" + photos[index].instname),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                     ),
