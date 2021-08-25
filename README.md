@@ -1,4 +1,4 @@
-# qrcode
+# check_mobile_app
 
 A new Flutter project.
 
